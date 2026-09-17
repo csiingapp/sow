@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSI Ingenieros — Solicitud de Servicio (SOW)</title>
+<style>
+:root {
+  --surface-1: #ffffff;
+  --surface-2: #f8fafc;
+  --border: #e5e7eb;
+  --text-primary: #1f2937;
+  --text-secondary: #4b5563;
+  --text-muted: #9ca3af;
+  --radius: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface-1: #ffffff;
+    --surface-2: #f8fafc;
+    --border: #e5e7eb;
+    --text-primary: #1f2937;
+    --text-secondary: #4b5563;
+    --text-muted: #9ca3af;
+  }
+}
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text-primary);
+  background: #eef0f3;
+  margin: 0;
+  padding: 24px 12px;
+}
+#sow-root {
+  max-width: 900px;
+  margin: 0 auto;
+}
+#sow-root input, #sow-root select, #sow-root textarea, #sow-root button {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  box-sizing: border-box;
+  background: #ffffff;
+}
+#sow-root button { background: #991B1B; color: #ffffff; border: none; padding: 10px 14px; font-size: 14px; font-weight: 500; cursor: pointer; border-radius: var(--radius); }
+#sow-root button:hover { background: #7a1616; }
+#sow-root h3 { margin: 0; }
+
+@media print {
+  @page { size: auto; margin: 10mm; }
+  body { background: #fff; padding: 0; }
+  body * { visibility: hidden; }
+  #print-view, #print-view * { visibility: visible; }
+  #print-view { position: absolute; left: 0; top: 0; width: 100%; padding: 0; }
+  #live-form { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div id="sow-root">
+<div id="live-form" style="border-top: 3px solid #991B1B; background: var(--surface-2); border-radius: 12px; padding: 1.25rem 1.5rem 1.5rem; font-size: 0;">
+<div style="font-size: 14px;">
+
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem;">
+    <img id="csi-logo" style="height: 26px; width: auto; flex-shrink: 0;" />
+    <span style="font-size: 13px; font-weight: 500; color: var(--text-secondary); letter-spacing: 0.02em;">CSI INGENIEROS — SOLICITUD DE SERVICIO (SOW)</span>
+  </div>
+
+  <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0 0 1.5rem;">Complete este formulario con los datos del proyecto. Al finalizar, genere el PDF y envíelo por correo electrónico a CSI Ingenieros; con esa información se preparará la estimación de plazo y costo.</p>
+
+  <h3 style="font-size: 14px; font-weight: 500; margin: 0 0 10px; display: flex; align-items: center; gap: 8px;"><span style="width: 18px; height: 18px; border-radius: 50%; background: #991B1B; color: #fff; font-size: 11px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">1</span>Información general</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px; margin-bottom: 1.5rem; max-width: 640px;">
+    <div><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Centro de costo (CC)</label><input id="cc" style="width: 100%;" /></div>
+    <div><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Nombre de proyecto</label><input id="nombreProyecto" style="width: 100%;" /></div>
+    <div><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">AC</label><input id="ac" style="width: 100%;" /></div>
+    <div><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Cliente</label><input id="cliente" style="width: 100%;" /></div>
+    <div><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Fecha de pedido</label><input id="fechaPedido" type="date" style="width: 100%;" /></div>
+    <div><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Fecha de entrega requerida</label><input id="fechaEntrega" type="date" style="width: 100%;" /></div>
+    <div>
+      <label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Plazo (días hábiles)</label>
+      <input id="plazo" type="number" style="width: 100%; background: #f3f4f6;" readonly />
+      <p style="font-size: 10px; color: var(--text-muted); margin: 3px 0 0;">Se calcula a partir de las fechas indicadas, sin fines de semana ni feriados de Uruguay.</p>
+    </div>
+    <div>
+      <label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Versión</label>
+      <input id="version" style="width: 100%; background: #f3f4f6;" readonly value="v1" />
+      <p style="font-size: 10px; color: var(--text-muted); margin: 3px 0 0;">Se numera automáticamente en este equipo cada vez que se genera el PDF.</p>
+    </div>
+    <div><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Ubicación del proyecto</label><input id="ubicacion" placeholder="Ej.: Piriápolis, Maldonado" style="width: 100%;" /><p id="dist-auto-msg" style="font-size: 10px; color: var(--text-muted); margin: 3px 0 0;"></p></div>
+    <div><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Distancia (Km, ida)</label><input id="dist-mvd" type="number" value="0" min="0" style="width: 100%;" /></div>
+  </div>
+
+  <h3 style="font-size: 14px; font-weight: 500; margin: 0 0 10px; display: flex; align-items: center; gap: 8px;"><span style="width: 18px; height: 18px; border-radius: 50%; background: #991B1B; color: #fff; font-size: 11px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">2</span>Alcance</h3>
+  <div style="margin-bottom: 1rem;">
+    <textarea id="objetivo" placeholder="Objetivo y descripción del pedido" rows="2" style="width: 100%; margin-bottom: 10px;"></textarea>
+    <div style="display: inline-block; width: 220px; vertical-align: top; margin: 0 10px 10px 0;"><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Área de vuelo (ha)</label><input id="areaVuelo" type="number" value="0" min="0" style="width: 100%;" /></div>
+    <div style="display: inline-block; width: 220px; vertical-align: top; margin: 0 10px 10px 0;"><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Longitud de tramo vial (km)</label><input id="kmVial" type="number" value="0" min="0" style="width: 100%;" /></div>
+    <div style="display: inline-block; width: 220px; vertical-align: top; margin: 0 10px 10px 0;"><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Área de relevamiento terrestre (m²)</label><input id="areaTerrestre" type="number" value="0" min="0" style="width: 100%;" /></div>
+  </div>
+
+  <p style="font-size: 12.5px; font-weight: 500; color: var(--text-primary); margin: 0 0 8px;">2.1 Equipamiento necesario</p>
+  <div style="margin-bottom: 1.5rem;">
+    <div style="display: inline-block; width: 280px; vertical-align: top; margin: 0 10px 10px 0;"><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Escaneo</label><select id="eq-escaner" style="width: 100%;"><option>No</option><option>Sí (georreferenciado, con dianas existentes)</option><option>Sí (georreferenciado, colocar dianas)</option><option>Sí (sin georreferenciar)</option></select></div>
+    <div style="display: inline-block; width: 220px; vertical-align: top; margin: 0 10px 10px 0;"><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Drone</label><select id="eq-drone" style="width: 100%;"><option>No</option><option>Sí (con Lidar)</option><option>Sí (con fotogrametría)</option></select></div>
+    <div style="display: inline-block; width: 200px; vertical-align: top; margin: 0 10px 10px 0;"><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">GPS</label><select id="eq-gps" style="width: 100%;"><option>No aplica</option><option>Sí</option><option>No</option></select></div>
+    <div style="display: inline-block; width: 200px; vertical-align: top; margin: 0 10px 10px 0;"><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Estación total</label><select id="eq-estacion" style="width: 100%;"><option>No aplica</option><option>Sí</option><option>No</option></select></div>
+    <div style="display: inline-block; width: 200px; vertical-align: top; margin: 0 10px 10px 0;"><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Eco sonda</label><select id="eq-ecosonda" style="width: 100%;"><option>No aplica</option><option>Sí</option><option>No</option></select></div>
+    <div style="display: inline-block; width: 200px; vertical-align: top; margin: 0 10px 10px 0;"><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Embarcación</label><select id="eq-embarcacion" style="width: 100%;"><option>No aplica</option><option>Sí</option><option>No</option></select></div>
+  </div>
+
+  <h3 style="font-size: 14px; font-weight: 500; margin: 0 0 10px; display: flex; align-items: center; gap: 8px;"><span style="width: 18px; height: 18px; border-radius: 50%; background: #991B1B; color: #fff; font-size: 11px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">3</span>Entregable</h3>
+  <div style="margin-bottom: 1.5rem;">
+
+    <div style="margin-bottom: 12px;"><label style="font-size: 12.5px; font-weight: 500; display: block; margin-bottom: 4px;">Nube de puntos</label><select id="nube-toggle" style="width: 200px;"><option>No aplica</option><option>Sí</option><option>No</option></select></div>
+    <div id="nube-detalle" style="margin: 0 0 14px 16px; display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; max-width: 600px; gap: 12px; margin-bottom: 8px;">
+        <div><b style="font-size: 13px;">LAS / LAZ</b><br><span style="font-size: 11px; color: var(--text-muted);">Formato estándar para nubes LiDAR; compatible con la mayoría de software GIS/CAD (Civil 3D, QGIS, CloudCompare).</span></div>
+        <select id="nube-las" style="width: 130px; flex-shrink: 0;"><option>No aplica</option><option>Sí</option><option>No</option></select>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; max-width: 600px; gap: 12px; margin-bottom: 8px;">
+        <div><b style="font-size: 13px;">E57</b><br><span style="font-size: 11px; color: var(--text-muted);">Formato de intercambio universal para escáneres 3D; utilizado en Leica Cyclone, Autodesk ReCap, Faro Scene.</span></div>
+        <select id="nube-e57" style="width: 130px; flex-shrink: 0;"><option>No aplica</option><option>Sí</option><option>No</option></select>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; max-width: 600px; gap: 12px;">
+        <div><b style="font-size: 13px;">RCP</b><br><span style="font-size: 11px; color: var(--text-muted);">Formato nativo de Autodesk ReCap; orientado a Revit/AutoCAD.</span></div>
+        <select id="nube-rcp" style="width: 130px; flex-shrink: 0;"><option>No aplica</option><option>Sí</option><option>No</option></select>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 12px;"><label style="font-size: 12.5px; font-weight: 500; display: block; margin-bottom: 4px;">Modelado BIM</label><select id="bim-toggle" style="width: 200px;"><option>No aplica</option><option>Sí</option><option>No</option></select></div>
+    <div id="bim-detalle" style="margin: 0 0 14px 16px; display: none;">
+      <p style="font-size: 11px; color: var(--text-muted); margin: 0 0 8px; max-width: 600px;">El LOD (nivel de desarrollo) indica el detalle geométrico del modelo; el LOI (nivel de información) indica los datos no gráficos asociados (materiales, fabricante, mantenimiento, etc.).</p>
+      <div style="display: inline-block; width: 200px; vertical-align: top; margin: 0 10px 10px 0;"><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">LOD</label><select id="bimLod" style="width: 100%;"><option>No aplica</option><option>LOD 100</option><option>LOD 200</option><option>LOD 300</option><option>LOD 350/400</option></select></div>
+      <div style="display: inline-block; width: 200px; vertical-align: top; margin: 0 10px 10px 0;"><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">LOI</label><select id="bimLoi" style="width: 100%;"><option>No aplica</option><option>LOI 100</option><option>LOI 200</option><option>LOI 300</option></select></div>
+    </div>
+
+    <div style="margin-bottom: 12px;"><label style="font-size: 12.5px; font-weight: 500; display: block; margin-bottom: 4px;">Archivos DWG</label><select id="dwg-toggle" style="width: 200px;"><option>No aplica</option><option>Sí</option><option>No</option></select></div>
+    <div id="dwg-detalle" style="margin: 0 0 14px 16px; display: none;">
+      <label style="font-size: 13px; margin-right: 16px;"><input type="checkbox" id="dwg-planta" style="margin-right: 5px;" />Planta</label>
+      <label style="font-size: 13px; margin-right: 16px;"><input type="checkbox" id="dwg-cortes" style="margin-right: 5px;" />Cortes</label>
+      <label style="font-size: 13px; margin-right: 16px;"><input type="checkbox" id="dwg-fachadas" style="margin-right: 5px;" />Fachadas</label>
+      <label style="font-size: 13px; margin-right: 16px;"><input type="checkbox" id="dwg-perfiles" style="margin-right: 5px;" />Perfiles</label>
+      <label style="font-size: 13px; margin-right: 16px;"><input type="checkbox" id="dwg-unifilares" style="margin-right: 5px;" />Análisis unifilares</label>
+    </div>
+
+    <div style="margin-bottom: 12px;"><label style="font-size: 12.5px; font-weight: 500; display: block; margin-bottom: 4px;">MDT (Modelo Digital de Terreno)</label><select id="mdt" style="width: 200px;"><option>No aplica</option><option>Sí</option><option>No</option></select></div>
+    <div style="margin-bottom: 12px;"><label style="font-size: 12.5px; font-weight: 500; display: block; margin-bottom: 4px;">Orthofoto</label><select id="orthofotos" style="width: 200px;"><option>No aplica</option><option>Sí</option><option>No</option></select></div>
+    <div style="margin-bottom: 12px;"><label style="font-size: 12.5px; font-weight: 500; display: block; margin-bottom: 4px;">Digitalización</label><select id="digitalizacion" style="width: 200px;"><option>No aplica</option><option>Sí</option><option>No</option></select></div>
+
+    <div style="margin-bottom: 12px;"><label style="font-size: 12.5px; font-weight: 500; display: block; margin-bottom: 4px;">Relevamiento convencional</label><select id="relevamiento-toggle" style="width: 200px;"><option>No aplica</option><option>Sí</option><option>No</option></select></div>
+    <div id="relevamiento-detalle" style="margin: 0 0 14px 16px; display: none;">
+      <label style="font-size: 13px; margin-right: 16px;"><input type="checkbox" id="relev-txt" style="margin-right: 5px;" />.txt</label>
+      <label style="font-size: 13px; margin-right: 16px;"><input type="checkbox" id="relev-csv" style="margin-right: 5px;" />.csv</label>
+    </div>
+
+    <div style="margin-top: 6px;"><label style="font-size: 12.5px; font-weight: 500; display: block; margin-bottom: 4px;">Inputs (tipos de archivos que enviará el AC/Cliente)</label><textarea id="inputs-cliente" placeholder="Ej.: planos DWG existentes, coordenadas de puntos fijos, fotografías del predio" rows="2" style="width: 100%; max-width: 600px;"></textarea></div>
+
+  </div>
+
+  <h3 style="font-size: 14px; font-weight: 500; margin: 0 0 10px; display: flex; align-items: center; gap: 8px;"><span style="width: 18px; height: 18px; border-radius: 50%; background: #991B1B; color: #fff; font-size: 11px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">4</span>Fuera de alcance</h3>
+  <div style="margin-bottom: 1.5rem;">
+    <textarea id="exclusiones" placeholder="Detalle libremente qué elementos no se espera que estén incluidos. Si no corresponde, puede dejarse en blanco." rows="3" style="width: 100%;"></textarea>
+  </div>
+
+  <div style="background: var(--surface-1); border-radius: var(--radius); padding: 0.85rem 1rem; margin-bottom: 1rem;">
+    <p style="font-size: 12px; font-weight: 600; margin: 0 0 4px;">Aclaraciones importantes</p>
+    <p style="font-size: 11.5px; color: var(--text-secondary); margin: 0 0 4px; line-height: 1.5;">Esta estimación refleja únicamente el costo estimado de ejecución (horas y costos directos) y no incluye margen de ganancia.</p>
+    <p style="font-size: 11.5px; color: var(--text-secondary); margin: 0; line-height: 1.5;">Los costos considerados son referenciales y deberán ser revisados y ajustados de acuerdo con la Planilla de Cotización vigente de la empresa al momento de elaborar la propuesta.</p>
+  </div>
+
+  <div style="background: #fff7ed; border: 1px solid #fdba74; border-radius: var(--radius); padding: 0.75rem 1rem; margin-bottom: 1rem;">
+    <p style="font-size: 12px; font-weight: 600; margin: 0 0 4px; color: #9a3412;">Enviar este PDF por correo electrónico a:</p>
+    <p style="font-size: 11.5px; margin: 0; color: #9a3412;">Ramiro Alonso — ralonso@csi-ing.com<br>Ana P. Saez — asaez@csi-ing.com<br>Marco Perez — mperezr@csi-ing.com</p>
+  </div>
+
+  <button id="btn-pdf" style="width: 100%;">Generar PDF de la solicitud ↗</button>
+  <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin: 0.75rem 0 0;">Guarde el PDF y envíelo por correo electrónico a CSI Ingenieros. La estimación de plazo y costo se remitirá por ese medio.</p>
+
+</div>
+</div>
+
+<div id="print-view"></div>
+</div>
+
+<script>
+var LOGO_SRC = "data:image/png;base64,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";
+document.getElementById('csi-logo').src = LOGO_SRC;
+
+function easterSunday(year) {
+  var a = year % 19, b = Math.floor(year / 100), c = year % 100;
+  var d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+  var g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+  var i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7;
+  var m = Math.floor((a + 11 * h + 22 * l) / 451);
+  var month = Math.floor((h + l - 7 * m + 114) / 31);
+  var day = ((h + l - 7 * m + 114) % 31) + 1;
+  return new Date(year, month - 1, day);
+}
+function addDays(date, days) { var d = new Date(date); d.setDate(d.getDate() + days); return d; }
+function uruguayHolidays(year) {
+  var holidays = [];
+  function push(m, d) { holidays.push(new Date(year, m - 1, d).toDateString()); }
+  push(1, 1); push(5, 1); push(5, 18); push(7, 18); push(8, 25); push(12, 25);
+  var easter = easterSunday(year);
+  holidays.push(addDays(easter, -48).toDateString());
+  holidays.push(addDays(easter, -47).toDateString());
+  holidays.push(addDays(easter, -3).toDateString());
+  holidays.push(addDays(easter, -2).toDateString());
+  return holidays;
+}
+function businessDaysBetween(startStr, endStr) {
+  if (!startStr || !endStr) return null;
+  var start = new Date(startStr + 'T00:00:00'), end = new Date(endStr + 'T00:00:00');
+  if (isNaN(start.getTime()) || isNaN(end.getTime()) || end <= start) return null;
+  var holidaySet = {};
+  for (var y = start.getFullYear(); y <= end.getFullYear(); y++) { uruguayHolidays(y).forEach(function(h) { holidaySet[h] = true; }); }
+  var count = 0, cur = addDays(start, 1);
+  while (cur <= end) { var dow = cur.getDay(); if (dow !== 0 && dow !== 6 && !holidaySet[cur.toDateString()]) count++; cur = addDays(cur, 1); }
+  return count;
+}
+function actualizarPlazo() {
+  var dias = businessDaysBetween(document.getElementById('fechaPedido').value, document.getElementById('fechaEntrega').value);
+  document.getElementById('plazo').value = dias === null ? '' : dias;
+}
+document.getElementById('fechaPedido').addEventListener('change', actualizarPlazo);
+document.getElementById('fechaEntrega').addEventListener('change', actualizarPlazo);
+
+var DISTANCIAS_MVD = { 'montevideo': 0, 'ciudad de la costa': 25, 'canelones': 25, 'las piedras': 30, 'pando': 30, 'atlantida': 45, 'la paz': 25, 'progreso': 35, 'san jose de mayo': 90, 'san jose': 90, 'piriapolis': 100, 'pan de azucar': 105, 'minas': 120, 'punta del este': 140, 'jose ignacio': 175, 'san carlos': 135, 'maldonado': 130, 'rocha': 200, 'la paloma': 230, 'chuy': 340, 'colonia del sacramento': 177, 'colonia': 177, 'carmelo': 230, 'nueva helvecia': 130, 'florida': 96, 'durazno': 180, 'trinidad': 160, 'flores': 160, 'mercedes': 260, 'soriano': 260, 'fray bentos': 310, 'rio negro': 310, 'paysandu': 380, 'salto': 498, 'artigas': 600, 'rivera': 500, 'tacuarembo': 390, 'melo': 380, 'cerro largo': 380, 'treinta y tres': 280, 'young': 320, 'dolores': 280 };
+function normalizar(s) { return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim(); }
+function buscarDistancia(ubic) {
+  var norm = normalizar(ubic);
+  if (!norm) return null;
+  var keys = Object.keys(DISTANCIAS_MVD).sort(function(a, b) { return b.length - a.length; });
+  for (var i = 0; i < keys.length; i++) { if (norm.indexOf(keys[i]) !== -1) return { km: DISTANCIAS_MVD[keys[i]], match: keys[i] }; }
+  return null;
+}
+document.getElementById('ubicacion').addEventListener('change', function() {
+  var r = buscarDistancia(this.value);
+  var msg = document.getElementById('dist-auto-msg');
+  if (r) { document.getElementById('dist-mvd').value = r.km; msg.textContent = 'Distancia sugerida: ' + r.km + ' km. Puede modificarse.'; }
+  else { msg.textContent = 'No se encontró la localidad en la tabla de referencia; cargue la distancia manualmente.'; }
+});
+
+function claveVersion() {
+  var nombre = normalizar(document.getElementById('nombreProyecto').value) || 'default';
+  var clave = 'sow_version_' + nombre.replace(/[^a-z0-9]/g, '');
+  return clave;
+}
+function siguienteVersion() {
+  var clave = claveVersion(), actual = 0;
+  try { actual = parseInt(localStorage.getItem(clave) || '0', 10); } catch (e) {}
+  return actual + 1;
+}
+function confirmarVersion(n) {
+  try { localStorage.setItem(claveVersion(), n); } catch (e) {}
+}
+
+function wireToggle(toggleId, detalleId) {
+  document.getElementById(toggleId).addEventListener('change', function() {
+    document.getElementById(detalleId).style.display = this.value === 'Sí' ? 'block' : 'none';
+  });
+}
+wireToggle('nube-toggle', 'nube-detalle');
+wireToggle('bim-toggle', 'bim-detalle');
+wireToggle('dwg-toggle', 'dwg-detalle');
+wireToggle('relevamiento-toggle', 'relevamiento-detalle');
+
+function val(id) { var el = document.getElementById(id); if (!el) return 'Sin especificar'; var v = el.value; return v ? v : 'Sin especificar'; }
+
+document.getElementById('btn-pdf').addEventListener('click', function() {
+  var v;
+  try { v = siguienteVersion(); } catch (e) { v = 1; }
+  document.getElementById('version').value = 'v' + v;
+
+  function row(label, value) { return '<tr><td style="padding:4px 8px;font-weight:600;background:#F3F4F6;border:1px solid #ddd;width:38%;">' + label + '</td><td style="padding:4px 8px;border:1px solid #ddd;">' + value + '</td></tr>'; }
+
+  var equipos = [];
+  if (document.getElementById('eq-drone').value !== 'No') equipos.push('Drone: ' + document.getElementById('eq-drone').value);
+  if (document.getElementById('eq-escaner').value !== 'No') equipos.push('Escaneo: ' + document.getElementById('eq-escaner').value);
+  ['gps','estacion','ecosonda','embarcacion'].forEach(function(r) { var v2 = document.getElementById('eq-' + r).value; if (v2 === 'Sí') equipos.push(r.toUpperCase()); });
+
+  var NUBE_CONCEPTOS = { 'LAS/LAZ': 'Formato estándar LiDAR, compatible con la mayoría de software GIS/CAD.', 'E57': 'Formato de intercambio universal para escáneres 3D.', 'RCP': 'Formato nativo de Autodesk ReCap, para Revit/AutoCAD.' };
+  var nubeVal = document.getElementById('nube-toggle').value, nubeTxt = nubeVal;
+  if (nubeVal === 'Sí') { var formatos = []; [['nube-las','LAS/LAZ'],['nube-e57','E57'],['nube-rcp','RCP']].forEach(function(f) { if (document.getElementById(f[0]).value === 'Sí') formatos.push(f[1] + ' (' + NUBE_CONCEPTOS[f[1]] + ')'); }); nubeTxt = 'Sí' + (formatos.length ? ' — ' + formatos.join(' | ') : ''); }
+
+  var bimVal = document.getElementById('bim-toggle').value, bimTxt = bimVal;
+  if (bimVal === 'Sí') { bimTxt = 'Sí — ' + document.getElementById('bimLod').value + ' / ' + document.getElementById('bimLoi').value; }
+
+  var dwgVal = document.getElementById('dwg-toggle').value, dwgTxt = dwgVal;
+  if (dwgVal === 'Sí') { var dwgLabels = { 'dwg-planta':'Planta','dwg-cortes':'Cortes','dwg-fachadas':'Fachadas','dwg-perfiles':'Perfiles','dwg-unifilares':'Análisis unifilares' }; var dwgSel = []; Object.keys(dwgLabels).forEach(function(id) { if (document.getElementById(id).checked) dwgSel.push(dwgLabels[id]); }); dwgTxt = 'Sí' + (dwgSel.length ? ' — ' + dwgSel.join(', ') : ''); }
+
+  var relevVal = document.getElementById('relevamiento-toggle').value, relevTxt = relevVal;
+  if (relevVal === 'Sí') { var fr = []; if (document.getElementById('relev-txt').checked) fr.push('.txt'); if (document.getElementById('relev-csv').checked) fr.push('.csv'); relevTxt = 'Sí' + (fr.length ? ' — ' + fr.join(', ') : ''); }
+
+  document.getElementById('print-view').innerHTML =
+    '<div style="font-family: Arial, sans-serif; color: #1f2937; max-width: 720px; line-height: 1.3;">' +
+    '<div style="border-top:3px solid #991B1B; padding-top:8px;"></div>' +
+    '<div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;">' +
+      '<div><h1 style="color:#991B1B; font-size:18px; margin:0 0 2px;">Solicitud de Servicio (SOW) — v' + v + '</h1>' +
+      '<p style="color:#6b7280; font-style:italic; margin:0; font-size:10.5px;">Enviar este documento a CSI Ingenieros para recibir una estimación de plazo y costo</p></div>' +
+      '<img src="' + LOGO_SRC + '" style="height:36px; width:auto;" />' +
+    '</div>' +
+    '<h2 style="color:#991B1B; font-size:13px; margin:10px 0 4px;">1. Información General</h2>' +
+    '<table style="width:100%; border-collapse:collapse; font-size:10.5px;">' +
+      row('Centro de costo (CC)', val('cc')) + row('Nombre de proyecto', val('nombreProyecto')) +
+      row('AC', val('ac')) + row('Cliente', val('cliente')) +
+      row('Fecha de pedido', val('fechaPedido')) + row('Fecha de entrega requerida', val('fechaEntrega')) +
+      row('Plazo (días hábiles)', val('plazo')) + row('Ubicación del proyecto', val('ubicacion')) + row('Distancia (Km, ida)', val('dist-mvd')) +
+    '</table>' +
+    '<h2 style="color:#991B1B; font-size:13px; margin:9px 0 4px;">2. Alcance</h2>' +
+    '<p style="font-size:10.5px; margin:0 0 4px;"><b>Objetivo:</b> ' + val('objetivo') + '</p>' +
+    '<table style="width:100%; border-collapse:collapse; font-size:10.5px;">' +
+      row('Área de vuelo', val('areaVuelo') + ' ha') + row('Longitud de tramo vial', val('kmVial') + ' km') + row('Área de relevamiento terrestre', val('areaTerrestre') + ' m²') +
+      row('Equipamiento necesario', equipos.length ? equipos.join('; ') : 'Ninguno') +
+    '</table>' +
+    '<h2 style="color:#991B1B; font-size:13px; margin:9px 0 4px;">3. Entregable</h2>' +
+    '<table style="width:100%; border-collapse:collapse; font-size:10.5px;">' +
+      row('Nube de puntos', nubeTxt) + row('Modelado BIM', bimTxt) + row('Archivos DWG', dwgTxt) +
+      row('MDT', val('mdt')) + row('Orthofoto', val('orthofotos')) + row('Digitalización', val('digitalizacion')) + row('Relevamiento convencional', relevTxt) +
+      row('Inputs (archivos que enviará el AC/Cliente)', val('inputs-cliente')) +
+    '</table>' +
+    '<h2 style="color:#991B1B; font-size:13px; margin:9px 0 4px;">4. Fuera de Alcance</h2>' +
+    '<p style="font-size:10.5px; margin:0;">' + val('exclusiones') + '</p>' +
+    '<div style="background:#f3f4f6; padding:6px 8px; margin-top:10px; font-size:9px;"><b>Aclaraciones importantes:</b><br>Esta estimación refleja únicamente el costo estimado de ejecución (horas y costos directos) y no incluye margen de ganancia.<br>Los costos considerados son referenciales y deberán ser revisados y ajustados de acuerdo con la Planilla de Cotización vigente de la empresa al momento de elaborar la propuesta.</div>' +
+    '<div style="background:#fff7ed; border:1px solid #fdba74; padding:6px 8px; margin-top:6px; font-size:9px;"><b>Enviar este PDF por correo electrónico a:</b> Ramiro Alonso (ralonso@csi-ing.com), Ana P. Saez (asaez@csi-ing.com), Marco Perez (mperezr@csi-ing.com)</div>' +
+    '<p style="text-align:center; font-size:9.5px; color:#6b7280; font-style:italic; margin-top:10px;">CSI / GTLyT</p>' +
+    '</div>';
+
+  window.print();
+  try { confirmarVersion(v); } catch (e) {}
+});
+</script>
+</body>
+</html>
