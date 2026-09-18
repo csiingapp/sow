@@ -87,8 +87,8 @@ body {
     </div>
     <div>
       <label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Versión</label>
-      <input id="version" style="width: 100%; background: #f3f4f6;" readonly value="v1" />
-      <p style="font-size: 10px; color: var(--text-muted); margin: 3px 0 0;">Se numera automáticamente en este equipo cada vez que se genera el PDF.</p>
+      <input id="version" style="width: 100%;" value="v1" />
+      <p style="font-size: 10px; color: var(--text-muted); margin: 3px 0 0;">Editar manualmente (v1, v2, v3...) al generar cada nueva versión del PDF.</p>
     </div>
     <div><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Ubicación del proyecto</label><input id="ubicacion" placeholder="Ej.: Piriápolis, Maldonado" style="width: 100%;" /><p id="dist-auto-msg" style="font-size: 10px; color: var(--text-muted); margin: 3px 0 0;"></p></div>
     <div><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Distancia (Km, ida)</label><input id="dist-mvd" type="number" value="0" min="0" style="width: 100%;" /></div>
@@ -166,12 +166,6 @@ body {
     <textarea id="exclusiones" placeholder="Detalle libremente qué elementos no se espera que estén incluidos. Si no corresponde, puede dejarse en blanco." rows="3" style="width: 100%;"></textarea>
   </div>
 
-  <div style="background: var(--surface-1); border-radius: var(--radius); padding: 0.85rem 1rem; margin-bottom: 1rem;">
-    <p style="font-size: 12px; font-weight: 600; margin: 0 0 4px;">Aclaraciones importantes</p>
-    <p style="font-size: 11.5px; color: var(--text-secondary); margin: 0 0 4px; line-height: 1.5;">Esta estimación refleja únicamente el costo estimado de ejecución (horas y costos directos) y no incluye margen de ganancia.</p>
-    <p style="font-size: 11.5px; color: var(--text-secondary); margin: 0; line-height: 1.5;">Los costos considerados son referenciales y deberán ser revisados y ajustados de acuerdo con la Planilla de Cotización vigente de la empresa al momento de elaborar la propuesta.</p>
-  </div>
-
   <div style="background: #fff7ed; border: 1px solid #fdba74; border-radius: var(--radius); padding: 0.75rem 1rem; margin-bottom: 1rem;">
     <p style="font-size: 12px; font-weight: 600; margin: 0 0 4px; color: #9a3412;">Enviar este PDF por correo electrónico a:</p>
     <p style="font-size: 11.5px; margin: 0; color: #9a3412;">Ramiro Alonso — ralonso@csi-ing.com<br>Ana P. Saez — asaez@csi-ing.com<br>Marco Perez — mperezr@csi-ing.com</p>
@@ -245,20 +239,6 @@ document.getElementById('ubicacion').addEventListener('change', function() {
   else { msg.textContent = 'No se encontró la localidad en la tabla de referencia; cargue la distancia manualmente.'; }
 });
 
-function claveVersion() {
-  var nombre = normalizar(document.getElementById('nombreProyecto').value) || 'default';
-  var clave = 'sow_version_' + nombre.replace(/[^a-z0-9]/g, '');
-  return clave;
-}
-function siguienteVersion() {
-  var clave = claveVersion(), actual = 0;
-  try { actual = parseInt(localStorage.getItem(clave) || '0', 10); } catch (e) {}
-  return actual + 1;
-}
-function confirmarVersion(n) {
-  try { localStorage.setItem(claveVersion(), n); } catch (e) {}
-}
-
 function wireToggle(toggleId, detalleId) {
   document.getElementById(toggleId).addEventListener('change', function() {
     document.getElementById(detalleId).style.display = this.value === 'Sí' ? 'block' : 'none';
@@ -272,9 +252,7 @@ wireToggle('relevamiento-toggle', 'relevamiento-detalle');
 function val(id) { var el = document.getElementById(id); if (!el) return 'Sin especificar'; var v = el.value; return v ? v : 'Sin especificar'; }
 
 document.getElementById('btn-pdf').addEventListener('click', function() {
-  var v;
-  try { v = siguienteVersion(); } catch (e) { v = 1; }
-  document.getElementById('version').value = 'v' + v;
+  var v = document.getElementById('version').value || 'v1';
 
   function row(label, value) { return '<tr><td style="padding:4px 8px;font-weight:600;background:#F3F4F6;border:1px solid #ddd;width:38%;">' + label + '</td><td style="padding:4px 8px;border:1px solid #ddd;">' + value + '</td></tr>'; }
 
@@ -298,12 +276,10 @@ document.getElementById('btn-pdf').addEventListener('click', function() {
 
   document.getElementById('print-view').innerHTML =
     '<div style="font-family: Arial, sans-serif; color: #1f2937; max-width: 720px; line-height: 1.3;">' +
-    '<div style="border-top:3px solid #991B1B; padding-top:8px;"></div>' +
-    '<div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;">' +
-      '<div><h1 style="color:#991B1B; font-size:18px; margin:0 0 2px;">Solicitud de Servicio (SOW) — v' + v + '</h1>' +
-      '<p style="color:#6b7280; font-style:italic; margin:0; font-size:10.5px;">Enviar este documento a Topografía para recibir una estimación de plazo y costo</p></div>' +
-      '<img src="' + LOGO_SRC + '" style="height:36px; width:auto;" />' +
-    '</div>' +
+    '<img src="' + LOGO_SRC + '" style="height:70px; width:auto; display:block;" />' +
+    '<hr style="border:none; border-top:3px solid #991B1B; margin:8px 0 6px;">' +
+    '<h1 style="color:#991B1B; font-size:18px; margin:0 0 2px;">SOLICITUD DE SERVICIO - TOPOGRAFÍA ' + v + '</h1>' +
+    '<p style="color:#6b7280; font-style:italic; margin:0 0 8px; font-size:10.5px;">Enviar este documento a Topografía para recibir una estimación de plazo y costo</p>' +
     '<h2 style="color:#991B1B; font-size:13px; margin:10px 0 4px;">1. Información General</h2>' +
     '<table style="width:100%; border-collapse:collapse; font-size:10.5px;">' +
       row('Centro de costo (CC)', val('cc')) + row('Nombre de proyecto', val('nombreProyecto')) +
@@ -333,7 +309,6 @@ document.getElementById('btn-pdf').addEventListener('click', function() {
   document.title = 'SERVICIO DE SOLICITUD_TOPOGRAFIA_v' + v;
   window.print();
   document.title = __origTitle;
-  try { confirmarVersion(v); } catch (e) {}
 });
 </script>
 </body>
