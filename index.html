@@ -79,7 +79,8 @@ body {
     <div><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">AC</label><input id="ac" style="width: 100%;" /></div>
     <div><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Cliente</label><input id="cliente" style="width: 100%;" /></div>
     <div><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Fecha de pedido</label><input id="fechaPedido" type="date" style="width: 100%;" /></div>
-    <div><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Fecha de entrega requerida</label><input id="fechaEntrega" type="date" style="width: 100%;" /></div>
+    <div><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Fecha de entrega de la estimación de horas</label><input id="fechaEntregaEstimacion" type="date" style="width: 100%;" /></div>
+    <div><label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Fecha de entrega requerida del trabajo</label><input id="fechaEntregaTrabajo" type="date" style="width: 100%;" /></div>
     <div>
       <label style="font-size: 11.5px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Plazo (días hábiles)</label>
       <input id="plazo" type="number" style="width: 100%; background: #f3f4f6;" readonly />
@@ -162,8 +163,13 @@ body {
   </div>
 
   <h3 style="font-size: 14px; font-weight: 500; margin: 0 0 10px; display: flex; align-items: center; gap: 8px;"><span style="width: 18px; height: 18px; border-radius: 50%; background: #991B1B; color: #fff; font-size: 11px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">4</span>Exclusiones</h3>
-  <div style="margin-bottom: 1.5rem;">
+  <div style="margin-bottom: 1rem;">
     <textarea id="exclusiones" placeholder="Detalle libremente qué elementos no se espera que estén incluidos. Si no corresponde, puede dejarse en blanco." rows="3" style="width: 100%;"></textarea>
+  </div>
+
+  <div style="margin-bottom: 1.5rem;">
+    <label style="font-size: 12.5px; font-weight: 500; display: block; margin-bottom: 4px;">Comentarios</label>
+    <textarea id="comentarios" placeholder="Comentarios adicionales" rows="3" style="width: 100%;"></textarea>
   </div>
 
   <div style="background: #fff7ed; border: 1px solid #fdba74; border-radius: var(--radius); padding: 0.75rem 1rem; margin-bottom: 1rem;">
@@ -217,11 +223,11 @@ function businessDaysBetween(startStr, endStr) {
   return count;
 }
 function actualizarPlazo() {
-  var dias = businessDaysBetween(document.getElementById('fechaPedido').value, document.getElementById('fechaEntrega').value);
+  var dias = businessDaysBetween(document.getElementById('fechaPedido').value, document.getElementById('fechaEntregaTrabajo').value);
   document.getElementById('plazo').value = dias === null ? '' : dias;
 }
 document.getElementById('fechaPedido').addEventListener('change', actualizarPlazo);
-document.getElementById('fechaEntrega').addEventListener('change', actualizarPlazo);
+document.getElementById('fechaEntregaTrabajo').addEventListener('change', actualizarPlazo);
 
 var DISTANCIAS_MVD = { 'montevideo': 0, 'ciudad de la costa': 25, 'canelones': 25, 'las piedras': 30, 'pando': 30, 'atlantida': 45, 'la paz': 25, 'progreso': 35, 'san jose de mayo': 90, 'san jose': 90, 'piriapolis': 100, 'pan de azucar': 105, 'minas': 120, 'punta del este': 140, 'jose ignacio': 175, 'san carlos': 135, 'maldonado': 130, 'rocha': 200, 'la paloma': 230, 'chuy': 340, 'colonia del sacramento': 177, 'colonia': 177, 'carmelo': 230, 'nueva helvecia': 130, 'florida': 96, 'durazno': 180, 'trinidad': 160, 'flores': 160, 'mercedes': 260, 'soriano': 260, 'fray bentos': 310, 'rio negro': 310, 'paysandu': 380, 'salto': 498, 'artigas': 600, 'rivera': 500, 'tacuarembo': 390, 'melo': 380, 'cerro largo': 380, 'treinta y tres': 280, 'young': 320, 'dolores': 280 };
 function normalizar(s) { return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim(); }
@@ -284,7 +290,7 @@ document.getElementById('btn-pdf').addEventListener('click', function() {
     '<table style="width:100%; border-collapse:collapse; font-size:10.5px;">' +
       row('Centro de costo (CC)', val('cc')) + row('Nombre de proyecto', val('nombreProyecto')) +
       row('AC', val('ac')) + row('Cliente', val('cliente')) +
-      row('Fecha de pedido', val('fechaPedido')) + row('Fecha de entrega requerida', val('fechaEntrega')) +
+      row('Fecha de pedido', val('fechaPedido')) + row('Fecha de entrega de la estimación de horas', val('fechaEntregaEstimacion')) + row('Fecha de entrega requerida del trabajo', val('fechaEntregaTrabajo')) +
       row('Plazo (días hábiles)', val('plazo')) + row('Ubicación del proyecto', val('ubicacion')) + row('Distancia (Km, ida)', val('dist-mvd')) +
     '</table>' +
     '<h2 style="color:#991B1B; font-size:13px; margin:9px 0 4px;">2. Alcance</h2>' +
@@ -300,7 +306,8 @@ document.getElementById('btn-pdf').addEventListener('click', function() {
       row('Inputs (archivos que enviará el AC/Cliente)', val('inputs-cliente')) +
     '</table>' +
     '<h2 style="color:#991B1B; font-size:13px; margin:9px 0 4px;">4. Exclusiones</h2>' +
-    '<p style="font-size:10.5px; margin:0;">' + val('exclusiones') + '</p>' +
+    '<p style="font-size:10.5px; margin:0 0 5px;">' + val('exclusiones') + '</p>' +
+    '<p style="font-size:10.5px; margin:0 0 5px;"><b>Comentarios:</b> ' + val('comentarios') + '</p>' +
     '<div style="background:#fff7ed; border:1px solid #fdba74; padding:6px 8px; margin-top:6px; font-size:9px;"><b>Enviar este PDF por correo electrónico a:</b> Ramiro Alonso (ralonso@csi-ing.com), Ana P. Saez (asaez@csi-ing.com), Marco Perez (mperezr@csi-ing.com)</div>' +
     '<p style="text-align:center; font-size:9.5px; color:#6b7280; font-style:italic; margin-top:10px;">CSI / Topografía</p>' +
     '</div>';
